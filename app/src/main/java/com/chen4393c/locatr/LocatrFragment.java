@@ -12,13 +12,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
@@ -37,6 +33,9 @@ public class LocatrFragment extends SupportMapFragment {
             Manifest.permission.ACCESS_COARSE_LOCATION,
     };
     private static final int REQUEST_LOCATION_PERMISSIONS = 0;
+    private Bitmap mMapImage;
+    private GalleryItem mMapItem;
+    private Location mCurrentLocation;
 
     private GoogleApiClient mClient;
 
@@ -144,9 +143,11 @@ public class LocatrFragment extends SupportMapFragment {
 
         private GalleryItem mGalleryItem;
         private Bitmap mBitmap;
+        private Location mLocation;
 
         @Override
         protected Void doInBackground(Location... locations) {
+            mLocation = locations[0];
             FlickrFetchr fetchr = new FlickrFetchr();
             List<GalleryItem> items = fetchr.searchPhotos(locations[0]);
             Log.i(TAG, "item.size(): " + items.size());
@@ -168,7 +169,9 @@ public class LocatrFragment extends SupportMapFragment {
 
         @Override
         protected void onPostExecute(Void aVoid) {
-
+            mMapImage = mBitmap;
+            mMapItem = mGalleryItem;
+            mCurrentLocation = mLocation;
         }
     }
 }
